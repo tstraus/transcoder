@@ -1,0 +1,6 @@
+.vscode/
+.idea/
+.vs/
+*.swp
+
+node_modules/
