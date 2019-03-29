@@ -1,15 +1,15 @@
 # Transcoder
 A web interface to transcode video files with Handbrake
 
-### Dependencies
+## Dependencies
 #### Nodejs
-sudo snap install node --classic --channel=11
+`sudo snap install node --classic --channel=11`
 #### Handbrake CLI
-sudo apt install handbrake-cli
+`sudo apt install handbrake-cli`
 
-### Build
-npm install
+## Build
+`npm install`
 
-### Run
-node .
+## Run
+`node .`
 
