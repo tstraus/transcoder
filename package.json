@@ -1,0 +1,20 @@
+{
+  "name": "transcoder",
+  "version": "0.1.0",
+  "description": "Web interface for handbrake video transcoding",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/tucker_strausbaugh/transcoder.git"
+  },
+  "author": "Tucker Strausbaugh",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/tucker_strausbaugh/transcoder#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "handbrake-js": "^3.0.8"
+  }
+}
