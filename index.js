@@ -6,7 +6,7 @@ const port = 3000
 
 app.get('/', (req, res) => res.send('Transcoder'))
 
-app.listen(port, () => console.log('Transcoder listening on port ${port}'))
+app.listen(port, () => console.log(`Transcoder listening on port ${port}`))
 
 hbjs.spawn({ input: 'something.avi', output: 'something.m4v' })
     .on('error', err => {
