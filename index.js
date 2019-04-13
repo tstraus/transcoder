@@ -23,7 +23,7 @@ hbjs.spawn({
     })
     .on('eError', err => {
         // encoding error
-        console.log('ENCODING ERRR: ' + err)
+        console.log('ENCODING ERROR: ' + err)
     })
     .on('progress', progress => {
         console.log(
