@@ -11,5 +11,5 @@ A web interface to transcode video files with Handbrake
 `npm install`
 
 ## Run
-`node .`
+`npm start`
 
