@@ -6,3 +6,4 @@
 *.mkv
 
 node_modules/
+public/bundle.js
