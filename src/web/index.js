@@ -1,9 +1,9 @@
 import { app } from 'hyperapp'
-import { Counter } from './components/counter'
-import { actions } from './actions'
+import { Encode } from './components/encode'
+import { requests } from './requests'
 
 const state = {
-  count: 0
+    file: './samples/in.mp4'
 }
 
-export const main = app(state, actions, Counter, document.body)
+export const main = app(state, requests, Encode, document.body)
