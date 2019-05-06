@@ -2,10 +2,8 @@
   "name": "transcoder",
   "version": "0.1.0",
   "description": "Web interface for handbrake video transcoding",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src",
     "build": "webpack-cli --mode=production",
     "postinstall": "npm run build",
     "lint": "standard --verbose --fix",
@@ -19,8 +17,6 @@
   "license": "MIT",
   "homepage": "https://bitbucket.org/tucker_strausbaugh/transcoder#readme",
   "dependencies": {
-    "express": "^4.16.4",
-    "handbrake-js": "^3.0.8",
     "hyperapp": "^1.2.9",
     "@babel/cli": "^7.4.3",
     "@babel/core": "^7.4.3",

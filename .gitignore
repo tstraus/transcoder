@@ -1,4 +1,4 @@
-.   vscode/
+.vscode/
 .idea/
 .vs/
 *.swp
@@ -6,3 +6,5 @@
 samples/out*
 node_modules/
 public/bundle.js
+
+transcoder
