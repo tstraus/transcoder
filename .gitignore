@@ -7,4 +7,7 @@ samples/out*
 node_modules/
 public/bundle.js
 
+lib
+bin
+
 transcoder
