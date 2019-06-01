@@ -9,7 +9,7 @@ module TRANSCODER
         puts env.params.json
     end
 
-    p = Process.new("./hb.sh", args: ["1"])
+    p = Process.new("./handbrake.sh", args: ["1"])
     p.wait()
     
     puts "done"
