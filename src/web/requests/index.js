@@ -1,4 +1,7 @@
 export const requests = {
+    open: () => state => {
+        const socket = new WebSocket('ws://localhost:3000/encode')
+    },
     encode: () => state  => {
         var request = new XMLHttpRequest()
         request.onreadystatechange = () => {
