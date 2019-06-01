@@ -1,7 +1,6 @@
 require "kemal"
 
 module Transcoder
-    stop = false
     count = 1
     sockets = [] of HTTP::WebSocket
 
