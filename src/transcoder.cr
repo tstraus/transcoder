@@ -1,9 +1,13 @@
 require "kemal"
 
-module TRANSCODER
+module Transcoder
     stop = false
     count = 1
     sockets = [] of HTTP::WebSocket
+
+    def self.printNumSockets(sockets)
+        puts "connections: #{sockets.size}"
+    end
 
     # HTTP methods
     get "/" do |env|
@@ -26,6 +30,7 @@ module TRANSCODER
     # WebSocket handlers
     ws "/encode" do |socket|
         sockets.push socket
+        printNumSockets(sockets)
 
         socket.on_message do |message|
             puts "websocket: #{message}"
@@ -33,19 +38,7 @@ module TRANSCODER
 
         socket.on_close do |_|
             sockets.delete(socket)
-        end
-    end
-
-    # monitor connections
-    spawn do
-        prevSocketsSize = sockets.size
-        while !stop
-            sleep 1.seconds
-
-            if prevSocketsSize != sockets.size
-                prevSocketsSize = sockets.size
-                puts "connections: #{prevSocketsSize}"
-            end
+            printNumSockets(sockets)
         end
     end
 
