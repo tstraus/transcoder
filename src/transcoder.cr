@@ -8,6 +8,11 @@ module Transcoder
         puts "connections: #{sockets.size}"
     end
 
+
+    def self.printProgress(id, progress)
+        puts "#{id}: #{progress} %"
+    end
+
     # HTTP methods
     get "/" do |env|
         env.redirect "index.html"
@@ -17,12 +22,45 @@ module Transcoder
         input = env.params.json
         puts input
 
-        spawn do
-            p = Process.new("./handbrake.sh", args: [input["file"].to_s, count.to_s])
+        # get the id of this transcode and update count
+        id = count
+        count += 1
 
-            count += 1
+        spawn do # start the transcoding process
+            p = Process.new("./handbrake.sh", args: [input["file"].to_s, id.to_s], output: Process::Redirect::Pipe)
+            io = p.output
+            progress = 0.0
+
+            spawn do # update the progress percentage in the background
+                while p.exists? && !io.closed?
+                    while true
+                        line = io.gets
+
+                        if line.is_a?(String)
+                            if line.includes?("\"Progress\"")
+                                progress = line.split(": ")[1].split(',')[0].to_f * 100.0 # get the percentage
+                            end
+                        else
+                            break
+                        end
+                    end
+
+                    sleep 0.5.seconds
+                end
+
+               progress = 100.0
+            end
+
+            while p.exists?
+                printProgress(id, progress)
+
+                sleep 1.seconds
+            end
+
             p.wait()
-            puts "done"
+
+            progress = 100.0
+            printProgress(id, progress)
         end
     end
 
