@@ -27,7 +27,19 @@ module Transcoder
         count += 1
 
         spawn do # start the transcoding process
-            p = Process.new("./handbrake.sh", args: [input["file"].to_s, id.to_s], output: Process::Redirect::Pipe)
+            p = Process.new("HandBrakeCLI", output: Process::Redirect::Pipe,
+                args: [
+                    "--json",
+                    "--input=#{input["file"].to_s}",
+                    "--output=samples/out_#{id.to_s}.mp4",
+                    "--encoder=x264",
+                    #"--encoder=x265",
+                    "--encoder-preset=fast",
+                    "--encoder-profile=auto",
+                    "--quality=18.0",
+                    "--aencoder=copy"
+                ])
+
             io = p.output
             progress = 0.0
 
@@ -37,8 +49,8 @@ module Transcoder
                         line = io.gets
 
                         if line.is_a?(String)
-                            if line.includes?("\"Progress\"")
-                                progress = line.split(": ")[1].split(',')[0].to_f * 100.0 # get the percentage
+                            if line.includes?("\"Progress\"") # get the percentage
+                                progress = line.split(": ")[1].split(',')[0].to_f * 100.0
                             end
                         else
                             break
