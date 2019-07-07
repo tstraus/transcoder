@@ -13,6 +13,12 @@ module Transcoder
         puts "#{id}: #{progress} %"
     end
 
+    def self.sendProgress(sockets, progress)
+        sockets.each do |s|
+            s.send progress.to_json
+        end
+    end
+
     # HTTP methods
     get "/" do |env|
         env.redirect "index.html"
@@ -26,12 +32,15 @@ module Transcoder
         id = count
         count += 1
 
+        inputFile = "#{input["file"].to_s}"
+        outputFile = "samples/out_#{id.to_s}.mp4"
+
         spawn do # start the transcoding process
             p = Process.new("HandBrakeCLI", output: Process::Redirect::Pipe,
                 args: [
                     "--json",
-                    "--input=#{input["file"].to_s}",
-                    "--output=samples/out_#{id.to_s}.mp4",
+                    "--input=#{inputFile}",
+                    "--output=#{outputFile}",
                     "--encoder=x264",
                     #"--encoder=x265",
                     "--encoder-preset=fast",
@@ -42,6 +51,8 @@ module Transcoder
 
             io = p.output
             progress = 0.0
+            lastSentProgress = progress
+            sendProgress(sockets, {id: id, input: inputFile, output: outputFile, progress: progress})
 
             spawn do # update the progress percentage in the background
                 while p.exists? && !io.closed?
@@ -63,16 +74,23 @@ module Transcoder
                progress = 100.0
             end
 
-            while p.exists?
-                printProgress(id, progress)
+            while p.exists? # print and send progress
+                if progress > lastSentProgress
+                    printProgress(id, progress)
 
-                sleep 1.seconds
+                    # push progress to clients
+                    sendProgress(sockets, {id: id, input: inputFile, output: outputFile, progress: progress})
+                    lastSentProgress = progress
+                end
+
+                sleep 2.seconds
             end
 
             p.wait()
 
             progress = 100.0
             printProgress(id, progress)
+            sendProgress(sockets, {id: id, input: inputFile, output: outputFile, progress: progress})
         end
     end
 
