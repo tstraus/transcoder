@@ -1,0 +1,6 @@
+build:
+  type: build
+  tags:
+    - htpc
+  script:
+    - ./build.sh
