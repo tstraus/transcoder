@@ -3,7 +3,44 @@
     <head>
         <meta charset="utf-8">
         <title>Transcoder</title>
-        <script defer src="bundle.js"></script>
     </head>
-    <body></body>
+    <body onload="requests.connect()">
+        <div id="encode_ui">
+            <button id="encode_button" onclick="requests.encode()">encode</button><br/>
+            <div id="progress_bars">
+                1: <progress id="progress_1" value="0.0" max="100"></progress>
+            </div>
+        </div>
+    </body>
+    <script>
+        var state = {
+            file: './samples/in.mp4',
+            transcodes: {1:0}
+        }
+        const requests = {
+            connect: () => {
+                const socket = new WebSocket('ws://localhost:3000/encode')
+                socket.onmessage = (event) => {
+                    const data = JSON.parse(event.data) // parse message content as json
+                    //console.log(data)
+                    console.log(data.input + ' -> ' + data.output + ' : ' + data.id + ' -> ' + data.progress + '%')
+
+                    state.transcodes[data.id] = data.progress // update the state
+                    document.getElementById('progress_' + data.id).value = data.progress.toString() // update progress bar
+                }
+            },
+            encode: () => {
+                var request = new XMLHttpRequest()
+                request.onreadystatechange = () => {
+                    //if (request.readyState == 4 && request.status == 200) {
+                    //    console.log(JSON.parse(request.responseText))
+                    //}
+                }
+
+                request.open('POST', 'http://localhost:3000/encode', true)
+                request.setRequestHeader('Content-Type', 'application/json')
+                request.send(JSON.stringify(state)) // start an encode
+            }
+        }
+    </script>
 </html>
