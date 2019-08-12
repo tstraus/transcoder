@@ -2,14 +2,18 @@
 A web interface to transcode video files with Handbrake
 
 ## Dependencies
-#### Nodejs
-`sudo snap install node --classic --channel=11`
 #### Handbrake CLI
 `sudo apt install handbrake-cli`
+#### Crystal
+`curl -sSL https://dist.crystal-lang.org/apt/setup.sh | sudo bash`
+`sudo apt install crystal`
 
 ## Build
-`npm install`
+#### Debug
+`./build.sh`
+#### Release
+`./build.sh -r`
 
 ## Run
-`npm start`
+`./transcoder`
 
