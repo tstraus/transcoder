@@ -29,8 +29,6 @@
                     } else {
                         newProgressBar(data)
                     }
-
-                    state.transcodes[data.id] = data.progress
                 }
             },
             encode: () => {
@@ -49,10 +47,13 @@
 
         function updateProgress(id, progress) {
             state.transcodes[id] = progress // update state
+
             document.getElementById('progress_' + id.toString()).value = progress.toString() // update bar
         }
 
         function newProgressBar(data) {
+            state.transcodes[data.id] = data.progress
+
             var p = document.createElement('progress')
             p.id = "progress_" + data.id.toString()
             p.max = "100"
