@@ -6,6 +6,7 @@
     </head>
     <body onload="requests.connect()">
         <div id="encode_ui">
+            <input type="file" id="file" name="file" accept="video"><br/>
             <button id="encode_button" onclick="requests.encode()">encode</button><br/>
             <div id="progress_bars"></div>
         </div>
