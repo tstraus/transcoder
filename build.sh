@@ -1,10 +1,11 @@
 #!/bin/bash
 
-echo "----- building server -----"
-shards install
-crystal build --release ./src/transcoder.cr
-echo "----- done server -----"
+BUILD_TYPE="--debug"
 
-echo "----- building website -----"
-npm install
-echo "----- done website -----"
+if [[ $1 = "-r" ]]; then
+    BUILD_TYPE="--release"
+fi
+
+shards install
+crystal build $BUILD_TYPE ./src/transcoder.cr
+

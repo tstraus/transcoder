@@ -3,7 +3,69 @@
     <head>
         <meta charset="utf-8">
         <title>Transcoder</title>
-        <script defer src="bundle.js"></script>
     </head>
-    <body></body>
+    <body onload="requests.connect()">
+        <div id="encode_ui">
+            <input type="file" id="file" name="file" accept="video"><br/>
+            <button id="encode_button" onclick="requests.encode()">encode</button><br/>
+            <div id="progress_bars"></div>
+        </div>
+    </body>
+    <script>
+        var state = {
+            file: './samples/in.mp4',
+            transcodes: {}
+        }
+
+        const requests = {
+            connect: () => {
+                const socket = new WebSocket('ws://localhost:3000/encode')
+                socket.onmessage = (event) => {
+                    const data = JSON.parse(event.data) // parse message content as json
+                    //console.log(data)
+                    console.log(data.input + ' -> ' + data.output + ' : ' + data.id + ' -> ' + data.progress + '%')
+
+                    if (data.id in state.transcodes) {
+                        updateProgress(data.id, data.progress)
+                    } else {
+                        newProgressBar(data)
+                    }
+                }
+            },
+            encode: () => {
+                var request = new XMLHttpRequest()
+                request.onreadystatechange = () => {
+                    //if (request.readyState == 4 && request.status == 200) {
+                    //    console.log(JSON.parse(request.responseText))
+                    //}
+                }
+
+                request.open('POST', 'http://localhost:3000/encode', true)
+                request.setRequestHeader('Content-Type', 'application/json')
+                request.send(JSON.stringify(state)) // start an encode
+            }
+        }
+
+        function updateProgress(id, progress) {
+            state.transcodes[id] = progress // update state
+
+            document.getElementById('progress_' + id.toString()).value = progress.toString() // update bar
+        }
+
+        function newProgressBar(data) {
+            state.transcodes[data.id] = data.progress
+
+            var p = document.createElement('progress')
+            p.id = "progress_" + data.id.toString()
+            p.max = "100"
+            p.value = data.progress.toString()
+            document.getElementById('progress_bars').appendChild(p)
+
+            var t = document.createTextNode(data.input + ' -> ' + data.output + ' : ' + data.id)
+            document.getElementById('progress_bars').appendChild(t)
+
+            var br = document.createElement('br')
+            document.getElementById('progress_bars').appendChild(br)
+        }
+    </script>
 </html>
