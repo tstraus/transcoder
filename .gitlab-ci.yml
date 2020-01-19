@@ -6,7 +6,7 @@ build:
     - ./build.sh
 
 docker:
-  type: package
+  type: deploy
   tags:
     - htpc
   script:
