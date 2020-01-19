@@ -4,3 +4,10 @@ build:
     - htpc
   script:
     - ./build.sh
+
+docker:
+  type: package
+  tags:
+    - htpc
+  script:
+    - docker build -t transcoder .
